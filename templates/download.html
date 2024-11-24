@@ -24,6 +24,11 @@
                 <div class="mb-3">
                     <label for="playlist_url" class="form-label">Playlist URL</label>
                     <input type="text" class="form-control" placeholder="Enter URL Here" id="YouTube_url" name="YouTube_url" required>
+                    <selector class="form-control" id="Format_selector" required>
+                        <option value="mp3">mp3</option>
+                        <option value="mp4-720p">mp4-720p</option>
+                        <option value="mp4-1080p">mp4-1080p</option>
+                    </selector>
                 </div>
                 <button type="submit" class="btn btn-primary">Download Playlist</button>
             </form>
