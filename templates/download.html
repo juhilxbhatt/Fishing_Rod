@@ -8,7 +8,25 @@
     </head>
     <body>
         <div class="container mt-3">
-            <h1>Fill the Form to download</h1>
+            <h1>Fill the Form to download Youtube Playlist </h1>
+            <form action="/download" method="post">
+                {% if message is defined and message %}
+                    {% if errorType is defined and errorType %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endif %}            
+                <div class="mb-3">
+                    <label for="playlist_url" class="form-label">Playlist URL</label>
+                    <input type="text" class="form-control" placeholder="Enter URL Here" id="YouTube_url" name="YouTube_url" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Download Playlist</button>
+            </form>
         </div>
     </body>
 </html>
