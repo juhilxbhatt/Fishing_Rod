@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request
 import re
+from pytube import YouTube
+from pathlib import Path
+import os
 
 app = Flask(__name__)
 
@@ -22,6 +25,10 @@ def download():
             # Use re.fullmatch to match the entire URL
             validate_YouTube_url = re.fullmatch(validate_url, YouTube_url)
             if validate_YouTube_url:
+                url = YouTube(YouTube_url)
+                video = url.streams.get_highest_resolution()
+                download_folder = str(os.path.join(Path.home(), 'Downloads'))
+                video.download(download_folder)
                 message = 'Starting Download'
                 errorType = 1
             else:
