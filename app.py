@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request
-import re
-from pytube import YouTube
+import subprocess
 from pathlib import Path
 import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+# Function to handle video downloading
+def download_video(youtube_url):
+    try:
+        download_folder = str(os.path.join(Path.home(), 'Downloads'))
+        command = [
+            'yt-dlp',
+            '-o', f'{download_folder}/%(title)s.%(ext)s',  # Output format
+            youtube_url
+        ]
+        subprocess.run(command, check=True)
+        return {'success': True, 'message': 'Download Successful'}
+    except subprocess.CalledProcessError as e:
+        return {'success': False, 'message': f'Error: {str(e)}'}
 
 @app.route("/download", methods=['GET', 'POST'])
 def download():
@@ -17,27 +26,15 @@ def download():
     if request.method == 'POST' and 'YouTube_url' in request.form:
         YouTube_url = request.form['YouTube_url'].strip()  # Remove any leading/trailing spaces
         print('URL Received: ' + YouTube_url)
+
         if YouTube_url:
-            # Updated regex to handle YouTube video and playlist URLs with extra parameters
-            validate_url = (
-                r'^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$'
-            )
-            # Use re.fullmatch to match the entire URL
-            validate_YouTube_url = re.fullmatch(validate_url, YouTube_url)
-            if validate_YouTube_url:
-                url = YouTube(YouTube_url)
-                video = url.streams.get_highest_resolution()
-                download_folder = str(os.path.join(Path.home(), 'Downloads'))
-                video.download(download_folder)
-                message = 'Starting Download'
-                errorType = 1
-            else:
-                print("Debug: URL did not match regex.")  # Debugging statement
-                message = 'Invalid URL'
-                errorType = 0
+            result = download_video(YouTube_url)  # Call the separate download function
+            message = result['message']
+            errorType = 1 if result['success'] else 0
         else:
             message = 'Please Enter URL'
             errorType = 0
+
     return render_template('download.html', message=message, errorType=errorType)
 
 if __name__ == "__main__":
