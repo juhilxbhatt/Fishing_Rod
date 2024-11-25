@@ -23,7 +23,10 @@ def url_validator(url):
     return False
 
 # Utility: Download video
-def download_video(Download_url, format_option, download_path):
+def download_video(Download_url, format_option):
+    # Set the default download directory
+    download_path = os.path.join(Path.home(), 'Downloads')  # Default Downloads folder
+
     try:
         command = ['yt-dlp', '-o', f'{download_path}/%(title)s.%(ext)s']
 
@@ -46,10 +49,9 @@ def download():
     if request.method == 'POST' and 'Download_url' in request.form and 'Format_selector' in request.form:
         Download_url = request.form['Download_url'].strip()
         format_option = request.form['Format_selector']
-        download_path = request.form['Download_path']
         
         if Download_url:
-            result = download_video(Download_url, format_option, download_path)
+            result = download_video(Download_url, format_option)
             message = result['message']
             errorType = 1 if result['success'] else 0
         else:
