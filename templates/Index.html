@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>YouTube Downloader</title>
+        <title>Fishing Rod</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container mt-3">
-            <h1>Fill the Form to download YouTube Playlist</h1>
+            <h1>Fishing Rod</h1>
             <form action="/download" method="post">
                 {% if message %}
                     {% if errorType and errorType|int == 1 %}
@@ -22,8 +22,8 @@
                     {% endif %}
                 {% endif %}
                 <div class="mb-3">
-                    <label for="playlist_url" class="form-label">Playlist URL</label>
-                    <input type="text" class="form-control" placeholder="Enter URL Here" id="YouTube_url" name="YouTube_url" required>
+                    <label for="YouTube_url" class="form-label">Webpage URL</label>
+                    <input type="text" class="form-control" id="Download_url" name="Download_url" placeholder="Enter URL Here" required>
                 </div>
                 <div class="mb-3">
                     <label for="Format_selector" class="form-label">Format</label>
@@ -33,7 +33,11 @@
                         <option value="mp4-1080p">mp4-1080p</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Download Playlist</button>
+                <div class="mb-3">
+                    <label for="Download_path" class="form-label">Download Path</label>
+                    <input type="text" class="form-control" id="Download_path" name="Download_path" placeholder="Enter Path Here" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Download</button>
             </form>
         </div>
     </body>
