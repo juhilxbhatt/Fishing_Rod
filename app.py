@@ -23,21 +23,17 @@ def url_validator(url):
     return False
 
 # Utility: Download video
-def download_video(Download_url, format_option):
+def download_video(Download_url, format_option, download_path):
     try:
-        download_folder = str(os.path.join(Path.home(), 'Downloads'))
-        command = ['yt-dlp', '-o', f'{download_folder}/%(title)s.%(ext)s']
-        
+        command = ['yt-dlp', '-o', f'{download_path}/%(title)s.%(ext)s']
+
         if format_option == 'mp3':
-            # Extract audio and save as .mp3
             command.extend(['-x', '--audio-format', 'mp3'])
         elif format_option == 'mp4-720p':
-            # Download video in 720p, prefer .mp4
             command.extend(['-f', 'bestvideo[ext=mp4][height<=720]+bestaudio[ext=m4a]/best[ext=mp4][height<=720]'])
         elif format_option == 'mp4-1080p':
-            # Download video in 1080p, prefer .mp4
             command.extend(['-f', 'bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4][height<=1080]'])
-        
+
         command.append(Download_url)
         subprocess.run(command, check=True)
         return {'success': True, 'message': 'Download Successful'}
@@ -50,9 +46,10 @@ def download():
     if request.method == 'POST' and 'Download_url' in request.form and 'Format_selector' in request.form:
         Download_url = request.form['Download_url'].strip()
         format_option = request.form['Format_selector']
+        download_path = request.form['Download_path']
         
         if Download_url:
-            result = download_video(Download_url, format_option)
+            result = download_video(Download_url, format_option, download_path)
             message = result['message']
             errorType = 1 if result['success'] else 0
         else:
